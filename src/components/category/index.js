@@ -9,7 +9,7 @@ const Category = props => {
 
   return (
     <li>
-      <button type="button" onClick={Cat}>
+      <p onClick={Cat}>
         {name}
       </button>
     </li>
