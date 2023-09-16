@@ -1,0 +1,13 @@
+li {
+  list-style: none;
+}
+.stars {
+  width: 200px;
+  height: 30px;
+}
+button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

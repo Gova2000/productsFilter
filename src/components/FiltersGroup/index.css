@@ -1,0 +1,31 @@
+.filters-group-container {
+  margin-top: 16px;
+}
+.btn1 {
+  border: 2px solid #0967d2;
+  color: #0967d2;
+  border-radius: 5px;
+  height: 30px;
+  margin-left: 10px;
+}
+ul {
+  padding-left: 0px;
+}
+input {
+  background-color: #f1f5f9;
+  border: none;
+  height: 30px;
+  width: 250px;
+  padding: 5px;
+}
+
+@media screen and (min-width: 768px) {
+  .filters-group-container {
+    width: 30%;
+    max-width: 350px;
+    margin-top: 48px;
+    flex-shrink: 0;
+  }
+}
+
+/* Write your CSS here */
