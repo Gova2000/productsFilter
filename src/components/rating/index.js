@@ -10,7 +10,7 @@ const Rating = props => {
   return (
     <li>
       <button type="button" onClick={ratin}>
-        <img src={imageUrl} alt={ratingId} className="stars" /> & up
+        <img src={imageUrl} alt={`rating ${ratingId}`} className="stars" /> & up
       </button>
     </li>
   )
