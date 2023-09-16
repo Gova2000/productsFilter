@@ -65,14 +65,22 @@ const ratingsList = [
   },
 ]
 
+const status = {
+  initial: 'initial',
+  success: 'success',
+  failure: 'failure',
+  inprogress: 'inprogress',
+}
+
 class AllProductsSection extends Component {
   state = {
     productsList: [],
-    isLoading: false,
+
     activeOptionId: sortbyOptions[0].optionId,
-    rating: ratingsList[0].ratingId,
-    category: categoryOptions[3].categoryId,
+    rating: '',
+    category: '',
     input: '',
+    stated: status.initial,
   }
 
   componentDidMount() {
@@ -81,7 +89,7 @@ class AllProductsSection extends Component {
 
   getProducts = async () => {
     this.setState({
-      isLoading: true,
+      stated: status.inprogress,
     })
     const jwtToken = Cookies.get('jwt_token')
 
@@ -108,8 +116,11 @@ class AllProductsSection extends Component {
       }))
       this.setState({
         productsList: updatedData,
-        isLoading: false,
+
+        stated: status.success,
       })
+    } else {
+      this.setState({stated: status.failure})
     }
   }
 
@@ -117,18 +128,27 @@ class AllProductsSection extends Component {
     this.setState({activeOptionId}, this.getProducts)
   }
 
-  update = (categoryId, ratingId, input) => {
-    this.setState(
-      {category: categoryId, rating: ratingId, input},
-      this.getProducts,
-    )
+  update = categoryId => {
+    this.setState({category: categoryId}, this.getProducts)
+  }
+
+  update1 = ratingId => {
+    this.setState({rating: ratingId}, this.getProducts)
+  }
+
+  input = input => {
+    this.setState({input})
+  }
+
+  enter = () => {
+    this.getProducts()
   }
 
   resetting = () => {
     this.setState(
       {
-        rating: ratingsList[0].ratingId,
-        category: categoryOptions[3].categoryId,
+        rating: '',
+        category: '',
         input: '',
       },
       this.getProducts,
@@ -142,10 +162,14 @@ class AllProductsSection extends Component {
     return (
       <div className="all-products-container">
         {productsList.length === 0 ? (
-          <img
-            src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-no-products-view.png"
-            alt="no products"
-          />
+          <>
+            <img
+              src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-no-products-view.png"
+              alt="no products"
+            />
+            <h1>No Products Found</h1>
+            <p>We could not find any products. Try other filters.</p>
+          </>
         ) : (
           <>
             <ProductsHeader
@@ -172,28 +196,52 @@ class AllProductsSection extends Component {
 
   // TODO: Add failure view
 
+  Failure = () => {
+    const {stated} = this.state
+
+    switch (stated) {
+      case status.success:
+        return this.renderProductsList()
+      case status.failure:
+        return this.failure()
+      case status.inprogress:
+        return this.renderLoader()
+
+      default:
+        return null
+    }
+  }
+
+  failure = () => (
+    <div>
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-products-error-view.png "
+        alt="products failure"
+      />
+      <h1>No Products Found</h1>
+      <p>We could not find any products. Try other filters.</p>
+    </div>
+  )
+
   render() {
-    const {isLoading, productsList} = this.state
-    const failure = isLoading ? this.renderLoader() : this.renderProductsList()
+    const {input} = this.state
+
     return (
       <div className="all-products-section">
         {/* TODO: Update the below element */}
 
         <FiltersGroup
+          input1={input}
           categoryList={categoryOptions}
           ratingList={ratingsList}
           click={this.update}
           set1={this.resetting}
+          enter={this.enter}
+          input={this.input}
+          rating={this.update1}
         />
 
-        {productsList === 0 ? (
-          <img
-            src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-products-error-view.png "
-            alt="products failure"
-          />
-        ) : (
-          failure
-        )}
+        {this.Failure()}
       </div>
     )
   }
